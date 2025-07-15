@@ -1,18 +1,19 @@
-import { ethers } from "ethers";
-import EscrowArtifact from "../../../artifacts/contracts/Escrow.sol/Escrow.json"
+import { BrowserProvider, ContractFactory } from "ethers";
+import Escrow from "../../../artifacts/contracts/Escrow.sol/Escrow.json"
 
-export default async function deployEscrow(arbiter, beneficiary, value, signer) {
-    const factory = await ethers.ContractFactory(
-        EscrowArtifact.abi,
-        EscrowArtifact.bytecode,
+export default async function deployEscrow(arbiter, beneficiary) {
+    const provider = new BrowserProvider(window.ethereum)
+    const signer = await provider.getSigner()
+
+    const factory = new ContractFactory(
+        Escrow.abi,
+        Escrow.bytecode,
         signer
     )
 
-    const contract = await factory.deploy(beneficiary, arbiter, {
-        value: ethers.utils.parseEther(value)
-    })
+    const contract = await factory.deploy(beneficiary, arbiter)
 
-    await contract.deployed();
+    await contract.waitForDeployment();
 
-    return contract.address;
+    return contract;
 }
