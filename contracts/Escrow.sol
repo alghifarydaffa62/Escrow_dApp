@@ -24,6 +24,8 @@ contract Escrow {
     /// @notice Balance held in the escrow
     uint public balance;
 
+    bool public isCompleted;
+
     /**
      * @notice Constructor sets up the contract participants
      * @param _services Address of the service provider
@@ -84,6 +86,7 @@ contract Escrow {
         (bool success,) = services.call{value: amount}("");
         require(success, "Failed!");
         balance = 0;
+        isCompleted = true;
 
         emit servicesPayed(msg.sender, services, amount);
     }
