@@ -1,36 +1,12 @@
-import { useEffect, useState } from "react"
-import { ethers } from "ethers"
-import EscrowAbi from "../../../artifacts/contracts/Escrow.sol/Escrow.json"
-import { useParams } from "react-router-dom"
-
-export default function EscrowBoxDetail() {
-    const { address } = useParams()
-    const [contract, setContract] = useState()
-    const [details, setDetails] = useState({})
-    const [account, setAccount] = useState("")
-
-    useEffect(() => {
-        const init = async () => {
-            const provider = new ethers.BrowserProvider(window.ethereum)
-            const signer = await provider.getSigner()
-            const escrow = new ethers.Contract(address, EscrowAbi.abi, signer)
-            setContract(escrow)
-
-            const [deployer, arbiter, services, bal] = await Promise.all([
-                escrow.deployer(),
-                escrow.arbiter(),
-                escrow.services(),
-                escrow.balance()
-            ])
-
-            const balance = ethers.formatEther(bal)
-            const userAddress = await signer.getAddress()
-
-            setAccount(userAddress)
-            setDetails({deployer, arbiter, beneficiary: services, balance})
+export default function EscrowBoxDetail({contract, account, address, details}) {
+    const handleApprove = async () => {
+        try {
+            const tx = await contract.approvePayment()
+            await tx.wait()
+        } catch(error) {
+            console.error("Approval failed: ", error)
         }
-        init()
-    }, [address])
+    }
 
     return(
         <div className="bg-[#121d32] p-6 rounded-md">
@@ -61,6 +37,15 @@ export default function EscrowBoxDetail() {
                     <h1 className="text-lg font-semibold">Balance: </h1>
                     <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.balance}</p>
                 </div>
+
+                {account === details.arbiter && details.balance !== "0.0" && (
+                    <button
+                        className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
+                        onClick={handleApprove}
+                    >
+                        Approve Payment
+                    </button>
+                )}
             </div>
         </div>
     )
