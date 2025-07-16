@@ -1,7 +1,7 @@
 import { BrowserProvider, ContractFactory } from "ethers";
 import Escrow from "../../../artifacts/contracts/Escrow.sol/Escrow.json"
 
-export default async function deployEscrow(arbiter, beneficiary) {
+export default async function deployEscrow(arbiter, services) {
     const provider = new BrowserProvider(window.ethereum)
     const signer = await provider.getSigner()
 
@@ -11,7 +11,7 @@ export default async function deployEscrow(arbiter, beneficiary) {
         signer
     )
 
-    const contract = await factory.deploy(beneficiary, arbiter)
+    const contract = await factory.deploy(services, arbiter)
 
     await contract.waitForDeployment();
 

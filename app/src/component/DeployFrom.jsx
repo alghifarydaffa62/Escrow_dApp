@@ -3,22 +3,22 @@ import deployEscrow from "../lib/deploy"
 
 export default function DeployForm({ onDeploy }) {
     const [arbiter, setArbiter] = useState("")
-    const [beneficiary, setBeneficiary] = useState("")
+    const [services, setServices] = useState("")
 
     const handleDeploy = async () => {
         try {
-            const contract = await deployEscrow(arbiter, beneficiary)
+            const contract = await deployEscrow(arbiter, services)
 
             const escrow = {
                 address: await contract.getAddress(),
                 arbiter,
-                beneficiary,
+                services,
                 contract
             }
 
             onDeploy(escrow)
             setArbiter("")
-            setBeneficiary("")
+            setServices("")
             console.log("contract deployed at: ", await contract.getAddress())
         } catch(error) {
             console.error("Deployment error: ", error)
@@ -35,8 +35,8 @@ export default function DeployForm({ onDeploy }) {
             </div>
 
             <div className="flex flex-col gap-2">
-                <label className="text-lg font-semibold">Beneficiary Address:</label>
-                <input type="text" onChange={e => setBeneficiary(e.target.value)} className="bg-[#192845] rounded-sm w-md h-8 p-2"/>
+                <label className="text-lg font-semibold">Service Provider Address:</label>
+                <input type="text" onChange={e => setServices(e.target.value)} className="bg-[#192845] rounded-sm w-md h-8 p-2"/>
             </div>
             
             <button onClick={handleDeploy} className="cursor-pointer bg-blue-600 mt-4 p-2 rounded-md font-semibold text-lg">Deploy</button>
