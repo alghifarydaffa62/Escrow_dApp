@@ -55,9 +55,6 @@ contract Escrow {
     /// @notice Emitted when the arbiter approves the payment to the service provider
     event servicesPayed(address indexed arbiter, address indexed service, uint amount);
 
-    /// @notice Emitted when the arbiter refunds to the deployer
-    event refundSuccess(address indexed arbiter, address indexed deployer, uint amount);
-
     // --------------------------
     // External Functions
     // --------------------------
@@ -89,21 +86,5 @@ contract Escrow {
         balance = 0;
 
         emit servicesPayed(msg.sender, services, amount);
-    }
-
-    /**
-     * @notice Allows the arbiter to refunds all the balance to the deployer of the contract.
-     * @dev Only arbiter can call this function and the deployer must have deposited ether.
-     * @dev Successfully refund to the deployer will emit the refundSuccess event. 
-     */
-    function refund() external payable onlyArbiter {
-        require(balance > 0, "Deployer hasn't send ether!");
-
-        uint amount = balance;
-        (bool success,) = deployer.call{value: amount}("");
-        require(success, "refund failed!");
-        balance = 0;
-
-        emit refundSuccess(msg.sender, deployer, amount);
     }
 }

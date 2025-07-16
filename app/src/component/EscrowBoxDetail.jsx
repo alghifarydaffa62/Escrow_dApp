@@ -11,7 +11,7 @@ export default function EscrowBoxDetail({contract, account, address, details}) {
     return(
         <div className="bg-[#121d32] p-6 rounded-md">
             <h1 className="text-center text-2xl font-bold">Escrow Details:</h1>
-
+            
             <div className="flex flex-col gap-4 mt-4">
                 <div>
                     <h1 className="text-lg font-semibold">Address: </h1>
@@ -25,7 +25,7 @@ export default function EscrowBoxDetail({contract, account, address, details}) {
                 
                 <div>
                     <h1 className="text-lg font-semibold">Service Provider: </h1>
-                    <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.beneficiary}</p>
+                    <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.services}</p>
                 </div>
 
                 <div>

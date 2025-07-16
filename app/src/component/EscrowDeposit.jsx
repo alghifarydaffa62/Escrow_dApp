@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { ethers } from "ethers"
+import success from "../assets/mark.png"
 
 export default function EscrowDeposit({contract, account, details}) {
     const [amount, setAmount] = useState()
@@ -54,9 +55,12 @@ export default function EscrowDeposit({contract, account, details}) {
                             </p>
                         )
                         ) : (
-                        <p className="text-blue-500 font-bold mt-4 text-lg text-center">
-                            Deployer has deposited ETH.
-                        </p>
+                            <div className="flex flex-col items-center mt-4">
+                                <img src={success} alt="" className="object-contain w-25 h-25"/>
+                                <p className="text-green-500 font-bold mt-4 text-xl text-center">
+                                    Deployer has deposited ETH.
+                                </p>
+                            </div>
                     )}
                 </div>
             )}
