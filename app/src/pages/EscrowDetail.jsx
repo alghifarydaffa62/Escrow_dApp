@@ -5,6 +5,7 @@ import EscrowAbi from "../../../artifacts/contracts/Escrow.sol/Escrow.json"
 import EscrowBoxDetail from "../component/EscrowBoxDetail"
 import EscrowDeposit from "../component/EscrowDeposit"
 import BackButton from "../component/backbutton"
+import Welcome from "../component/Welcome"
 
 export default function EscrowDetail() {
     const { address } = useParams()
@@ -19,18 +20,19 @@ export default function EscrowDetail() {
             const escrow = new ethers.Contract(address, EscrowAbi.abi, signer)
             setContract(escrow)
 
-            const [deployer, arbiter, services, bal] = await Promise.all([
+            const [deployer, arbiter, services, bal, isCompleted] = await Promise.all([
                 escrow.deployer(),
                 escrow.arbiter(),
                 escrow.services(),
-                escrow.balance()
+                escrow.balance(),
+                escrow.isCompleted()
             ])
 
             const balance = ethers.formatEther(bal)
             const userAddress = await signer.getAddress()
 
             setAccount(userAddress)
-            setDetails({deployer, arbiter, services, balance})
+            setDetails({deployer, arbiter, services, balance, isCompleted})
         }
         init()
     }, [address])
@@ -39,26 +41,7 @@ export default function EscrowDetail() {
         <div className="text-white font-mono">
             <h1 className="text-center text-3xl font-semibold my-6">Escrow <span className="text-blue-300">{address}</span></h1>
             <BackButton/>
-            {account === details.deployer ? (
-                <div className="text-center mb-6">
-                    <h1 className="text-3xl font-bold">Welcome <span className="text-blue-400">Deployer</span></h1>
-                    <h1 className="text-lg">Please deposit ether for the service provider</h1>
-                </div>
-            ) : account === details.arbiter ? (
-                <div className="text-center mb-6">
-                    <h1 className="text-3xl font-bold">Welcome <span className="text-green-400">Arbiter</span></h1>
-                    <p className="text-lg">You will approve the transaction once ether is deposited</p>
-                </div>
-            ) : account === details.services ? (
-                <div className="text-center mb-6">
-                    <h1 className="text-3xl font-bold">Welcome <span className="text-cyan-400">Service Provider</span></h1>
-                    <p className="text-lg">Please wait for the payment to be approved</p>
-                </div>
-            ) : (
-                <div className="text-center mb-6">
-                    <p className="text-red-600 text-3xl font-bold">You are not a participant in this escrow</p>
-                </div>
-            )}
+            <Welcome account={account} details={details}/>
             <div className="flex justify-center gap-6 mb-6">
                 <EscrowBoxDetail contract={contract} account={account} address={address} details={details}/>
                 <EscrowDeposit contract={contract} account={account} details={details}/>
