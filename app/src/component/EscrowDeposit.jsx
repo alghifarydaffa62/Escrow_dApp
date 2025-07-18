@@ -2,9 +2,11 @@ import { useState } from "react"
 import { ethers } from "ethers"
 import success from "../assets/mark.png"
 import completed from "../assets/check.png"
+import DepositSuccessPop from "./PopUp/DepositSuccessPop"
 
 export default function EscrowDeposit({contract, account, details}) {
     const [amount, setAmount] = useState()
+    const [showSuccessPop, setShowSuccessPop] = useState(false)
 
     const handleDeposit = async () => {
         try {
@@ -21,7 +23,8 @@ export default function EscrowDeposit({contract, account, details}) {
             })
 
             await tx.wait()
-            alert("Deposit Success")
+            setShowSuccessPop(true)
+            setAmount("")
         } catch(error) {
             console.error(error)
             alert("Deposit failed")
@@ -30,6 +33,7 @@ export default function EscrowDeposit({contract, account, details}) {
 
     return (
         <>
+            {showSuccessPop && <DepositSuccessPop onClose={() => setShowSuccessPop(false)}/>}
             {(account === details.deployer || account === details.arbiter) && (
                 <div className="bg-[#121d32] p-6 rounded-md h-fit">
                     <h1 className="text-center text-2xl font-bold">Deposit Ether</h1>
@@ -50,6 +54,7 @@ export default function EscrowDeposit({contract, account, details}) {
                             <h1 className="text-lg font-semibold">Deposit Amount:</h1>
                             <input
                                 className="w-sm bg-[#172641] p-2 rounded-md"
+                                value={amount}
                                 type="text"
                                 onChange={(e) => setAmount(e.target.value)}
                             />

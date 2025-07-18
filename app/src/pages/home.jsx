@@ -25,6 +25,6 @@ export default function Home() {
                 <DeployForm onDeploy={handleNewEscrow}/>
                 <ContactList escrows={escrows}/>
             </div>
-        </div>
+        </div>  
     )
 }
