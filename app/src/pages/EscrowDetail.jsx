@@ -6,7 +6,6 @@ import EscrowBoxDetail from "../component/EscrowBoxDetail"
 import EscrowDeposit from "../component/EscrowDeposit"
 import BackButton from "../component/backbutton"
 import Welcome from "../component/Welcome"
-import DepositSuccessPop from "../component/PopUp/DepositSuccessPop"
 
 export default function EscrowDetail() {
     const { address } = useParams()
@@ -39,7 +38,7 @@ export default function EscrowDetail() {
         }
         init()
     }, [address])
-
+    
     if(loading) {
         return(
             <div className="text-white flex justify-center items-center min-h-screen">

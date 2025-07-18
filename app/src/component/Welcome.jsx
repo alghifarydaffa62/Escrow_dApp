@@ -41,9 +41,7 @@ export default function Welcome({account, details}) {
                     )}
                 </div>
             ) : (
-                <div className="text-center mb-6">
-                    <p className="text-red-600 text-3xl font-bold">You are not a participant in this escrow</p>
-                </div>
+                <div></div>
             )}
         </>
     )

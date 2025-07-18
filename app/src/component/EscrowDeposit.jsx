@@ -4,7 +4,7 @@ import success from "../assets/mark.png"
 import completed from "../assets/check.png"
 import DepositSuccessPop from "./PopUp/DepositSuccessPop"
 
-export default function EscrowDeposit({contract, account, details}) {
+export default function EscrowDeposit({contract, account, details, onSuccess}) {
     const [amount, setAmount] = useState()
     const [showSuccessPop, setShowSuccessPop] = useState(false)
 
@@ -25,6 +25,7 @@ export default function EscrowDeposit({contract, account, details}) {
             await tx.wait()
             setShowSuccessPop(true)
             setAmount("")
+            onSuccess()
         } catch(error) {
             console.error(error)
             alert("Deposit failed")
