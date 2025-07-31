@@ -2,6 +2,7 @@
 
 body {
     @apply bg-[#0e243d];
+    @apply font-mono;
 }
 ::-webkit-scrollbar {
   width: 6px;
