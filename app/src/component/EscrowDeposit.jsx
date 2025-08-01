@@ -3,10 +3,13 @@ import { ethers } from "ethers"
 import success from "../assets/mark.png"
 import completed from "../assets/check.png"
 import DepositSuccessPop from "./PopUp/DepositSuccessPop"
+import PendingPopUp from "./PopUp/PendingPopUp"
 
 export default function EscrowDeposit({contract, account, details}) {
     const [amount, setAmount] = useState()
     const [showSuccessPop, setShowSuccessPop] = useState(false)
+    const [isProcessing, setIsProcessing] = useState(false)
+    const [isDeposit, setIsDeposit] = useState(false)
 
     const handleDeposit = async () => {
         try {
@@ -21,10 +24,13 @@ export default function EscrowDeposit({contract, account, details}) {
             const tx = await contract.deposit({
                 value: ethers.parseEther(amount)
             })
-
+            setIsProcessing(true)
             await tx.wait()
+
+            setIsProcessing(false)
             setShowSuccessPop(true)
             setAmount("")
+            setIsDeposit(true)
         } catch(error) {
             console.error(error)
             alert("Deposit failed")
@@ -32,13 +38,15 @@ export default function EscrowDeposit({contract, account, details}) {
     }
     return (
         <>
+            {isProcessing && <PendingPopUp type="Deployer Deposit"/>}
             {showSuccessPop && <DepositSuccessPop isOpen={showSuccessPop} onClose={() => setShowSuccessPop(false)}/>}
+            
             {(account === details.deployer || account === details.arbiter) && (
                 <div className="bg-[#121d32] p-6 rounded-md h-fit">
                     <h1 className="text-center text-2xl font-bold">Deposit Ether</h1>
 
                     {/* Kondisi 4: Escrow selesai */}
-                    {details.isCompleted && details.balance === "0.0" && (
+                    {isDeposit && (
                         <div className="flex flex-col gap-2 items-center mt-4">
                             <img src={completed} alt="" className="object-contain w-35 h-35"/>
                             <p className="text-xl text-green-400 font-semibold">

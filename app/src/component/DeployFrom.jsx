@@ -1,14 +1,17 @@
 import { useState } from "react"
 import deployEscrow from "../lib/deploy"
 import EscrowDeploymentPop from "./PopUp/EscrowDeploymentPop"
+import PendingPopUp from "./PopUp/PendingPopUp"
 
 export default function DeployForm({ onDeploy }) {
     const [arbiter, setArbiter] = useState("")
     const [services, setServices] = useState("")
     const [showDeployPop, setShowDeployPop] = useState(false)
+    const [isProcessing, setIsProcessing] = useState(false)
 
     const handleDeploy = async () => {
         try {
+            setIsProcessing(true)
             const contract = await deployEscrow(arbiter, services)
 
             const escrow = {
@@ -19,6 +22,8 @@ export default function DeployForm({ onDeploy }) {
             }
 
             onDeploy(escrow)
+
+            setIsProcessing(false)
             setShowDeployPop(true)
             setArbiter("")
             setServices("")
@@ -28,7 +33,8 @@ export default function DeployForm({ onDeploy }) {
     }
 
     return(
-        <>
+        <>  
+            {isProcessing && <PendingPopUp type="Escrow Deployment"/>}
             {showDeployPop && <EscrowDeploymentPop isOpen={showDeployPop} onClose={() => setShowDeployPop(false)}/>}
             <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-[330px]">
                 <h1 className="text-2xl font-semibold">Deploy New Escrow</h1>

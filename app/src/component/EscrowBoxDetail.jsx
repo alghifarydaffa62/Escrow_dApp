@@ -1,14 +1,21 @@
 import { useState } from "react"
 import EscrowCompletePop from "./PopUp/EscrowCompletePop"
+import PendingPopUp from "./PopUp/PendingPopUp"
 
 export default function EscrowBoxDetail({contract, account, address, details}) {
     const [showCompletePop, setShowCompletePop] = useState(false)
+    const [isProcessing, setIsProcessing] = useState(false)
+    const [isFinish, setIsFinish] = useState(false)
 
     const handleApprove = async () => {
         try {
             const tx = await contract.approvePayment()
+            setIsProcessing(true)
             await tx.wait()
+
+            setIsProcessing(false)
             setShowCompletePop(true)
+            setIsFinish(true)
         } catch(error) {
             console.error("Approval failed: ", error)
         }
@@ -31,6 +38,7 @@ export default function EscrowBoxDetail({contract, account, address, details}) {
 
     return(
         <>
+            {isProcessing && <PendingPopUp type="Arbiter Approvement"/>}
             {showCompletePop && <EscrowCompletePop isOpen={showCompletePop} onClose={() => setShowCompletePop(false)}/>}
             <div className="bg-[#121d32] p-6 rounded-md">
                 <h1 className="text-center text-2xl font-bold">Escrow Details:</h1>
@@ -63,14 +71,21 @@ export default function EscrowBoxDetail({contract, account, address, details}) {
                         <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.balance}</p>
                     </div>
 
-                    {account === details.arbiter && details.balance !== "0.0" && !details.isCompleted && (
-                        <button
-                            className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
-                            onClick={handleApprove}
-                        >
-                            Approve Payment
-                        </button>
+                    {!isFinish ? (
+                        account === details.arbiter && 
+                        details.balance !== "0.0" && 
+                        !details.isCompleted && (
+                            <button
+                                className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
+                                onClick={handleApprove}
+                            >
+                                Approve Payment
+                            </button>
+                        )
+                    ) : (
+                        <div></div>
                     )}
+                    
                 </div>
             </div>
         </>
