@@ -1,10 +1,14 @@
 import { X } from "lucide-react";
 import deploySuccess from "../../assets/rocket.png"
 
-export default function EscrowDeploymentPop({ onClose }) {
+export default function EscrowDeploymentPop({ isOpen, onClose }) {
     return(
-        <div className="fixed inset-0 bg-[#101724] bg-opacity-50 flex justify-center items-center z-50">
-            <div className="relative bg-[#121d32] rounded-2xl p-6 shadow-xl w-[400px] text-center font-mono text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className={`
+                relative transform transition-all duration-500 
+                ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}
+                bg-[#121d32] rounded-2xl p-6 shadow-xl w-[400px] text-center font-mono text-white`}
+            >
                 <button
                     className="absolute top-2 right-2 text-gray-400 hover:text-white"
                     onClick={onClose}

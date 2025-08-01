@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import DeployForm from "../component/DeployFrom"
 import ContactList from "../component/ContractList"
+import DepositSuccessPop from "../component/PopUp/DepositSuccessPop"
 
 export default function Home() {
     const [escrows, setEscrows] = useState([])

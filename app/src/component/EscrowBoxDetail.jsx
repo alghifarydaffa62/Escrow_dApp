@@ -31,7 +31,7 @@ export default function EscrowBoxDetail({contract, account, address, details}) {
 
     return(
         <>
-            {showCompletePop && <EscrowCompletePop onClose={() => setShowCompletePop(false)}/>}
+            {showCompletePop && <EscrowCompletePop isOpen={showCompletePop} onClose={() => setShowCompletePop(false)}/>}
             <div className="bg-[#121d32] p-6 rounded-md">
                 <h1 className="text-center text-2xl font-bold">Escrow Details:</h1>
                 <h1 className={`text-lg font-bold mt-2 ${details.isCompleted ? "text-green-400" : "text-yellow-500"}`}>

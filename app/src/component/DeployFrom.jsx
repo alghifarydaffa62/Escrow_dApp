@@ -22,7 +22,6 @@ export default function DeployForm({ onDeploy }) {
             setShowDeployPop(true)
             setArbiter("")
             setServices("")
-
         } catch(error) {
             console.error("Deployment error: ", error)
         }
@@ -30,7 +29,7 @@ export default function DeployForm({ onDeploy }) {
 
     return(
         <>
-            {showDeployPop && <EscrowDeploymentPop onClose={() => setShowDeployPop(false)}/>}
+            {showDeployPop && <EscrowDeploymentPop isOpen={showDeployPop} onClose={() => setShowDeployPop(false)}/>}
             <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-[330px]">
                 <h1 className="text-2xl font-semibold">Deploy New Escrow</h1>
 

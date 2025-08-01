@@ -4,7 +4,7 @@ import success from "../assets/mark.png"
 import completed from "../assets/check.png"
 import DepositSuccessPop from "./PopUp/DepositSuccessPop"
 
-export default function EscrowDeposit({contract, account, details, onSuccess}) {
+export default function EscrowDeposit({contract, account, details}) {
     const [amount, setAmount] = useState()
     const [showSuccessPop, setShowSuccessPop] = useState(false)
 
@@ -25,16 +25,14 @@ export default function EscrowDeposit({contract, account, details, onSuccess}) {
             await tx.wait()
             setShowSuccessPop(true)
             setAmount("")
-            onSuccess()
         } catch(error) {
             console.error(error)
             alert("Deposit failed")
         }  
     }
-
     return (
         <>
-            {showSuccessPop && <DepositSuccessPop onClose={() => setShowSuccessPop(false)}/>}
+            {showSuccessPop && <DepositSuccessPop isOpen={showSuccessPop} onClose={() => setShowSuccessPop(false)}/>}
             {(account === details.deployer || account === details.arbiter) && (
                 <div className="bg-[#121d32] p-6 rounded-md h-fit">
                     <h1 className="text-center text-2xl font-bold">Deposit Ether</h1>
