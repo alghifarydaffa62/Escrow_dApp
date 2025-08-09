@@ -1,6 +1,6 @@
 import success from "../../assets/mark.png"
 
-export default function DepositSuccessPop({ depositAmount, isOpen, onClose }) {
+export default function DepositSuccessPop({ isOpen, onClose, hash, date, depositAmount }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className={`
@@ -15,11 +15,18 @@ export default function DepositSuccessPop({ depositAmount, isOpen, onClose }) {
                 <div className="flex flex-col gap-3 p-3 border-1 border-gray-500 rounded-lg">
                     <div className="flex justify-between">
                         <h1 className="text-xl font-bold">Date</h1>
-                        <p className="font-semibold">{new Date().toLocaleString()}</p>
+                        <p className="font-semibold">{date}</p>
                     </div>
                     <div className="flex justify-between">
                         <h1 className="text-xl font-bold">Transaction Hash</h1>
-                        <p className="font-semibold">ssggsgdsgsdgsgs</p>
+                        <a 
+                          href={`https://sepolia.etherscan.io/tx/${hash}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="font-semibold text-blue-400 underline"
+                        >
+                          {hash}...
+                        </a>
                     </div>
                     <div className="flex justify-between">
                         <h1 className="text-xl font-bold">Status</h1>

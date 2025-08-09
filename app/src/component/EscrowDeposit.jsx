@@ -25,12 +25,22 @@ export default function EscrowDeposit({contract, account, details}) {
                 value: ethers.parseEther(amount)
             })
             setIsProcessing(true)
-            await tx.wait()
+            const receipt = await tx.wait()
 
             setIsProcessing(false)
-            setShowSuccessPop(true)
             setAmount("")
             setIsDeposit(true)
+
+            const txHash = receipt.hash
+            const block = await contract.provider.getBlock(receipt.blockNumber)
+            const date = new Date(block.timestamp * 1000).toLocaleString()
+
+            setShowSuccessPop({
+                open: true,
+                hash: txHash,
+                date,
+                amount
+            })
         } catch(error) {
             console.error(error)
             alert("Deposit failed")
