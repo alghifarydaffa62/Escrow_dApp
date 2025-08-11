@@ -25,7 +25,7 @@ export default function DepositSuccessPop({ isOpen, onClose, hash, date, deposit
                           rel="noopener noreferrer" 
                           className="font-semibold text-blue-400 underline"
                         >
-                          {hash}...
+                          {hash.slice(0, 10)}...
                         </a>
                     </div>
                     <div className="flex justify-between">

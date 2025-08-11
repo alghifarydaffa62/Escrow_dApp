@@ -2,33 +2,41 @@ import { useState } from "react"
 import EscrowCompletePop from "./PopUp/EscrowCompletePop"
 import PendingPopUp from "./PopUp/PendingPopUp"
 
-export default function EscrowBoxDetail({contract, account, address, details}) {
-    const [showCompletePop, setShowCompletePop] = useState(false)
+export default function EscrowBoxDetail({ contract, account, address, details }) {
     const [isProcessing, setIsProcessing] = useState(false)
-    const [isFinish, setIsFinish] = useState(false)
+    const [isCompleteOpen, setIsCompleteOpen] = useState(false)
+    const [completeData, setCompleteData] = useState(null)
 
     const handleApprove = async () => {
         try {
             const tx = await contract.approvePayment()
             setIsProcessing(true)
-            await tx.wait()
 
+            const receipt = await tx.wait()
             setIsProcessing(false)
-            setShowCompletePop(true)
-            setIsFinish(true)
-        } catch(error) {
+
+            // Ambil data transaksi untuk popup
+            const txHash = receipt.hash
+            const block = await contract.provider.getBlock(receipt.blockNumber)
+            const date = new Date(block.timestamp * 1000).toLocaleString()
+
+            setCompleteData({ hash: txHash, date })
+            setIsCompleteOpen(true)
+
+        } catch (error) {
             console.error("Approval failed: ", error)
+            alert("Approval failed")
         }
     }
 
     const isAuthorized = (
         account === details.deployer ||
         account === details.services ||
-        account == details.arbiter
+        account === details.arbiter
     )
 
-    if(!isAuthorized) {
-        return(
+    if (!isAuthorized) {
+        return (
             <div className="bg-[#121d32] p-6 rounded-md text-center text-red-400">
                 <h1 className="text-2xl font-semibold">Access Denied</h1>
                 <p className="text-xl">You are not authorized to view this escrow.</p>
@@ -36,59 +44,59 @@ export default function EscrowBoxDetail({contract, account, address, details}) {
         )
     }
 
-    return(
+    return (
         <>
-            {isProcessing && <PendingPopUp type="Arbiter Approvement"/>}
-            {showCompletePop && <EscrowCompletePop isOpen={showCompletePop} onClose={() => setShowCompletePop(false)}/>}
+            {isProcessing && <PendingPopUp type="Escrow Approvement" />}
+
+            {isCompleteOpen && completeData && (
+                <EscrowCompletePop
+                    isOpen={isCompleteOpen}
+                    onClose={() => setIsCompleteOpen(false)}
+                    hash={completeData.hash}
+                    date={completeData.date}
+                    amount={details.balance}
+                />
+            )}
+
             <div className="bg-[#121d32] p-6 rounded-md">
                 <h1 className="text-center text-2xl font-bold">Escrow Details:</h1>
-                <h1 className={`text-lg font-bold mt-2 ${details.isCompleted ? "text-green-400" : "text-yellow-500"}`}>
+                <h1
+                    className={`text-lg font-bold mt-2 ${details.isCompleted ? "text-green-400" : "text-yellow-500"}`}
+                >
                     Escrow status: {details.isCompleted ? "Completed" : "Not Completed"}
                 </h1>
+
                 <div className="flex flex-col gap-4 mt-2">
-                    <div>
-                        <h1 className="text-lg font-semibold">Address: </h1>
-                        <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{address}</p>
-                    </div>
+                    <DetailRow label="Address" value={address} />
+                    <DetailRow label="Escrow Deployer" value={details.deployer} />
+                    <DetailRow label="Service Provider" value={details.services} />
+                    <DetailRow label="Arbiter Address" value={details.arbiter} />
+                    <DetailRow label="Balance" value={details.balance} />
 
-                    <div>
-                        <h1 className="text-lg font-semibold">Escrow Deployer: </h1>
-                        <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.deployer}</p>
-                    </div>
-                    
-                    <div>
-                        <h1 className="text-lg font-semibold">Service Provider: </h1>
-                        <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.services}</p>
-                    </div>
-
-                    <div>
-                        <h1 className="text-lg font-semibold">Arbiter Address: </h1>
-                        <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.arbiter}</p>
-                    </div>
-
-                    <div>
-                        <h1 className="text-lg font-semibold">Balance: </h1>
-                        <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400">{details.balance}</p>
-                    </div>
-
-                    {!isFinish ? (
-                        account === details.arbiter && 
-                        details.balance !== "0.0" && 
-                        !details.isCompleted && (
+                    {!details.isCompleted &&
+                        details.balance !== "0.0" &&
+                        account === details.arbiter && (
                             <button
                                 className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
                                 onClick={handleApprove}
                             >
                                 Approve Payment
                             </button>
-                        )
-                    ) : (
-                        <div></div>
-                    )}
-                    
+                        )}
                 </div>
             </div>
         </>
-        
+    )
+}
+
+// Komponen kecil biar rapi
+function DetailRow({ label, value }) {
+    return (
+        <div>
+            <h1 className="text-lg font-semibold">{label}: </h1>
+            <p className="p-3 bg-[#172641] mt-2 rounded-lg text-gray-400 break-all">
+                {value}
+            </p>
+        </div>
     )
 }

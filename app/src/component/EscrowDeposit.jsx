@@ -5,67 +5,73 @@ import completed from "../assets/check.png"
 import DepositSuccessPop from "./PopUp/DepositSuccessPop"
 import PendingPopUp from "./PopUp/PendingPopUp"
 
-export default function EscrowDeposit({contract, account, details}) {
-    const [amount, setAmount] = useState()
-    const [showSuccessPop, setShowSuccessPop] = useState(false)
+export default function EscrowDeposit({ contract, account, details }) {
+    const [amount, setAmount] = useState("")
     const [isProcessing, setIsProcessing] = useState(false)
-    const [isDeposit, setIsDeposit] = useState(false)
+    const [isSuccessOpen, setIsSuccessOpen] = useState(false)
+    const [successData, setSuccessData] = useState(null)
 
     const handleDeposit = async () => {
         try {
-            if(account !== details.deployer) {
+            if (account !== details.deployer) {
                 return alert("Only deployer can deposit")
             }
 
-            if(!amount || isNaN(amount) || Number(amount) <= 0) {
+            if (!amount || isNaN(amount) || Number(amount) <= 0) {
                 return alert("Please enter a valid amount")
             }
 
             const tx = await contract.deposit({
                 value: ethers.parseEther(amount)
             })
+
             setIsProcessing(true)
             const receipt = await tx.wait()
-
             setIsProcessing(false)
             setAmount("")
-            setIsDeposit(true)
 
+            // ambil hash & date dari blockchain
             const txHash = receipt.hash
-            const block = await contract.provider.getBlock(receipt.blockNumber)
+            const block = await contract.BrowserProvider.getBlock(receipt.blockNumber)
             const date = new Date(block.timestamp * 1000).toLocaleString()
 
-            setShowSuccessPop({
-                open: true,
-                hash: txHash,
-                date,
-                amount
-            })
-        } catch(error) {
+            // simpan ke state popup
+            setSuccessData({ hash: txHash, date, amount })
+            setIsSuccessOpen(true)
+
+        } catch (error) {
             console.error(error)
-            alert("Deposit failed")
-        }  
+        }
     }
+
     return (
         <>
-            {isProcessing && <PendingPopUp type="Deployer Deposit"/>}
-            {showSuccessPop && <DepositSuccessPop isOpen={showSuccessPop} onClose={() => setShowSuccessPop(false)}/>}
-            
+            {isProcessing && <PendingPopUp type="Deployer Deposit" />}
+            {isSuccessOpen && successData && (
+                <DepositSuccessPop
+                    isOpen={isSuccessOpen}
+                    onClose={() => setIsSuccessOpen(false)}
+                    hash={successData.hash}
+                    date={successData.date}
+                    depositAmount={successData.amount}
+                />
+            )}
+
             {(account === details.deployer || account === details.arbiter) && (
                 <div className="bg-[#121d32] p-6 rounded-md h-fit">
                     <h1 className="text-center text-2xl font-bold">Deposit Ether</h1>
 
-                    {/* Kondisi 4: Escrow selesai */}
-                    {isDeposit && (
+                    {/* Escrow selesai */}
+                    {details.isCompleted && (
                         <div className="flex flex-col gap-2 items-center mt-4">
-                            <img src={completed} alt="" className="object-contain w-35 h-35"/>
+                            <img src={completed} alt="" className="object-contain w-35 h-35" />
                             <p className="text-xl text-green-400 font-semibold">
-                            Escrow is now completed.
+                                Escrow is now completed.
                             </p>
                         </div>
                     )}
 
-                    {/* Kondisi 1: Deployer deposit */}
+                    {/* Deployer deposit */}
                     {!details.isCompleted && details.balance === "0.0" && account === details.deployer && (
                         <div className="flex flex-col gap-4 mt-6">
                             <h1 className="text-lg font-semibold">Deposit Amount:</h1>
@@ -84,14 +90,14 @@ export default function EscrowDeposit({contract, account, details}) {
                         </div>
                     )}
 
-                    {/* Kondisi 2: Arbiter menunggu deposit */}
+                    {/* Arbiter menunggu deposit */}
                     {!details.isCompleted && details.balance === "0.0" && account === details.arbiter && (
                         <p className="text-yellow-400 mt-4 font-semibold text-center">
-                        Waiting for deployer to deposit ETH.
+                            Waiting for deployer to deposit ETH.
                         </p>
                     )}
 
-                    {/* Kondisi 3: ETH sudah dideposit (belum approve) */}
+                    {/* ETH sudah dideposit (belum approve) */}
                     {!details.isCompleted && details.balance !== "0.0" && (
                         <div className="flex flex-col items-center mt-4">
                             <img src={success} alt="" className="object-contain w-25 h-25" />
@@ -103,7 +109,5 @@ export default function EscrowDeposit({contract, account, details}) {
                 </div>
             )}
         </>
-
     )
-
 }
