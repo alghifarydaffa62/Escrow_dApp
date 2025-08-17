@@ -5,38 +5,47 @@ import completed from "../assets/check.png"
 import DepositSuccessPop from "./PopUp/DepositSuccessPop"
 import PendingPopUp from "./PopUp/PendingPopUp"
 
-export default function EscrowDeposit({ contract, account, details }) {
+export default function EscrowDeposit({ contract, account, details, refreshDetails }) {
     const [amount, setAmount] = useState("")
     const [isProcessing, setIsProcessing] = useState(false)
     const [isSuccessOpen, setIsSuccessOpen] = useState(false)
     const [successData, setSuccessData] = useState(null)
+    const [error, setError] = useState("")
+
+    const validateAmount = () => {
+        if (!amount) {
+            setError("Amount tidak boleh kosong.")
+            return false
+        }
+        if (isNaN(amount) || Number(amount) <= 0) {
+            setError("Amount harus berupa angka lebih besar dari 0.")
+            return false
+        }
+        setError("")
+        return true
+    }
 
     const handleDeposit = async () => {
-        try {
-            if (account !== details.deployer) {
-                return alert("Only deployer can deposit")
-            }
+        if (!validateAmount()) return
 
-            if (!amount || isNaN(amount) || Number(amount) <= 0) {
-                return alert("Please enter a valid amount")
-            }
+        try {
+            setIsProcessing(true)
 
             const tx = await contract.deposit({
                 value: ethers.parseEther(amount)
             })
 
-            setIsProcessing(true)
             const receipt = await tx.wait()
             setIsProcessing(false)
             setAmount("")
 
             const txHash = receipt.hash
-
             setSuccessData({ hash: txHash, amount })
             setIsSuccessOpen(true)
 
         } catch (error) {
             console.error(error)
+            setIsProcessing(false)
         }
     }
 
@@ -46,7 +55,10 @@ export default function EscrowDeposit({ contract, account, details }) {
             {isSuccessOpen && successData && (
                 <DepositSuccessPop
                     isOpen={isSuccessOpen}
-                    onClose={() => setIsSuccessOpen(false)}
+                    onClose={() => {
+                        setIsSuccessOpen(false)
+                        refreshDetails() 
+                    }}
                     hash={successData.hash}
                     depositAmount={successData.amount}
                 />
@@ -66,19 +78,22 @@ export default function EscrowDeposit({ contract, account, details }) {
                     )}
 
                     {details.balance === "0.0" && !details.isCompleted && account === details.deployer && (
-                        <div className="flex flex-col gap-4 mt-6">
+                        <div className="flex flex-col gap-3 mt-6">
                             <h1 className="text-lg font-semibold">Deposit Amount:</h1>
                             <input
-                                className="w-sm bg-[#172641] p-2 rounded-md"
+                                className={`w-sm bg-[#172641] p-2 rounded-md border ${error ? "border-red-500" : "border-transparent"}`}
                                 value={amount}
                                 type="text"
                                 onChange={(e) => setAmount(e.target.value)}
                             />
+                            {error && <span className="text-red-400 text-sm">{error}</span>}
+
                             <button
                                 onClick={handleDeposit}
-                                className="cursor-pointer text-center p-2 font-semibold rounded-md bg-blue-700 hover:bg-blue-800"
+                                disabled={isProcessing}
+                                className="cursor-pointer text-center p-2 font-semibold rounded-md bg-blue-700 hover:bg-blue-800 disabled:opacity-50"
                             >
-                                Deposit
+                                {isProcessing ? "Processing..." : "Deposit"}
                             </button>
                         </div>
                     )}

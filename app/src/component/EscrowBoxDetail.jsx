@@ -2,7 +2,7 @@ import { useState } from "react"
 import EscrowCompletePop from "./PopUp/EscrowCompletePop"
 import PendingPopUp from "./PopUp/PendingPopUp"
 
-export default function EscrowBoxDetail({ contract, account, address, details }) {
+export default function EscrowBoxDetail({ contract, account, address, details, refreshDetails }) {
     const [isProcessing, setIsProcessing] = useState(false)
     const [isCompleteOpen, setIsCompleteOpen] = useState(false)
     const [completeData, setCompleteData] = useState(null)
@@ -50,9 +50,13 @@ export default function EscrowBoxDetail({ contract, account, address, details })
             {isCompleteOpen && completeData && (
                 <EscrowCompletePop
                     isOpen={isCompleteOpen}
-                    onClose={() => setIsCompleteOpen(false)}
+                    onClose={() => {
+                        setIsCompleteOpen(false)
+                        refreshDetails()
+                    }}
                     hash={completeData.hash}
                     // date={completeData.date}
+                    service={details.services}
                     amount={details.balance}
                 />
             )}
@@ -72,16 +76,15 @@ export default function EscrowBoxDetail({ contract, account, address, details })
                     <DetailRow label="Arbiter Address" value={details.arbiter} />
                     <DetailRow label="Balance" value={details.balance} />
 
-                    {!details.isCompleted &&
-                        account === details.arbiter && (
-                            <button
-                                className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
-                                onClick={handleApprove}
-                            >
-                                Approve Payment
-                            </button>
+                    {!details.isCompleted && account === details.arbiter && (
+                        <button
+                            className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
+                            onClick={handleApprove}
+                            disabled={isProcessing}
+                        >
+                            {isProcessing ? "Processing..." : "Approve Payment"}
+                        </button>
                     )}
-
                 </div>
             </div>
         </>

@@ -1,7 +1,7 @@
 import completed from "../../assets/check.png"
 import { X } from "lucide-react"
 
-export default function EscrowCompletePop({isOpen, onClose, hash, amount}) {
+export default function EscrowCompletePop({isOpen, onClose, hash, amount, service}) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className={`
@@ -30,15 +30,8 @@ export default function EscrowCompletePop({isOpen, onClose, hash, amount}) {
                         </a>
                     </div>
                     <div className="flex justify-between">
-                        <h1 className="text-lg font-bold">Transaction Hash</h1>
-                        <a 
-                            href={`https://sepolia.etherscan.io/tx/${hash}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="font-semibold text-blue-400 underline"
-                        >
-                            {hash.slice(0, 20)}...
-                        </a>
+                        <h1 className="text-lg font-bold">Send To</h1>
+                        <h1 className="font-semibold">{service.slice(0, 20)}...</h1>
                     </div>
                     <div className="flex justify-between">
                         <h1 className="text-lg font-bold">Escrow Amount</h1>
