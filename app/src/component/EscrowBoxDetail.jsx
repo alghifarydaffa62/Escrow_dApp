@@ -15,12 +15,11 @@ export default function EscrowBoxDetail({ contract, account, address, details })
             const receipt = await tx.wait()
             setIsProcessing(false)
 
-            // Ambil data transaksi untuk popup
             const txHash = receipt.hash
-            const block = await contract.provider.getBlock(receipt.blockNumber)
-            const date = new Date(block.timestamp * 1000).toLocaleString()
+            // const block = await contract.provider.getBlock(receipt.blockNumber)
+            // const date = new Date(block.timestamp * 1000).toLocaleString()
 
-            setCompleteData({ hash: txHash, date })
+            setCompleteData({ hash: txHash })
             setIsCompleteOpen(true)
 
         } catch (error) {
@@ -53,7 +52,7 @@ export default function EscrowBoxDetail({ contract, account, address, details })
                     isOpen={isCompleteOpen}
                     onClose={() => setIsCompleteOpen(false)}
                     hash={completeData.hash}
-                    date={completeData.date}
+                    // date={completeData.date}
                     amount={details.balance}
                 />
             )}
@@ -74,7 +73,6 @@ export default function EscrowBoxDetail({ contract, account, address, details })
                     <DetailRow label="Balance" value={details.balance} />
 
                     {!details.isCompleted &&
-                        details.balance !== "0.0" &&
                         account === details.arbiter && (
                             <button
                                 className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
@@ -82,14 +80,14 @@ export default function EscrowBoxDetail({ contract, account, address, details })
                             >
                                 Approve Payment
                             </button>
-                        )}
+                    )}
+
                 </div>
             </div>
         </>
     )
 }
 
-// Komponen kecil biar rapi
 function DetailRow({ label, value }) {
     return (
         <div>

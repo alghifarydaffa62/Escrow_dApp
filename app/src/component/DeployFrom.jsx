@@ -8,6 +8,7 @@ export default function DeployForm({ onDeploy }) {
     const [services, setServices] = useState("")
     const [showDeployPop, setShowDeployPop] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
+    const [deployedEscrow, setDeployedEscrow] = useState()
 
     const handleDeploy = async () => {
         try {
@@ -22,6 +23,7 @@ export default function DeployForm({ onDeploy }) {
             }
 
             onDeploy(escrow)
+            setDeployedEscrow(escrow)
 
             setIsProcessing(false)
             setShowDeployPop(true)
@@ -35,7 +37,7 @@ export default function DeployForm({ onDeploy }) {
     return(
         <>  
             {isProcessing && <PendingPopUp type="Escrow Deployment"/>}
-            {showDeployPop && <EscrowDeploymentPop isOpen={showDeployPop} onClose={() => setShowDeployPop(false)}/>}
+            {showDeployPop && <EscrowDeploymentPop isOpen={showDeployPop} onClose={() => setShowDeployPop(false)} address={deployedEscrow.address}/>}
             <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-[330px]">
                 <h1 className="text-2xl font-semibold">Deploy New Escrow</h1>
 

@@ -30,13 +30,9 @@ export default function EscrowDeposit({ contract, account, details }) {
             setIsProcessing(false)
             setAmount("")
 
-            // ambil hash & date dari blockchain
             const txHash = receipt.hash
-            const block = await contract.BrowserProvider.getBlock(receipt.blockNumber)
-            const date = new Date(block.timestamp * 1000).toLocaleString()
 
-            // simpan ke state popup
-            setSuccessData({ hash: txHash, date, amount })
+            setSuccessData({ hash: txHash, amount })
             setIsSuccessOpen(true)
 
         } catch (error) {
@@ -52,7 +48,6 @@ export default function EscrowDeposit({ contract, account, details }) {
                     isOpen={isSuccessOpen}
                     onClose={() => setIsSuccessOpen(false)}
                     hash={successData.hash}
-                    date={successData.date}
                     depositAmount={successData.amount}
                 />
             )}
@@ -61,7 +56,6 @@ export default function EscrowDeposit({ contract, account, details }) {
                 <div className="bg-[#121d32] p-6 rounded-md h-fit">
                     <h1 className="text-center text-2xl font-bold">Deposit Ether</h1>
 
-                    {/* Escrow selesai */}
                     {details.isCompleted && (
                         <div className="flex flex-col gap-2 items-center mt-4">
                             <img src={completed} alt="" className="object-contain w-35 h-35" />
@@ -71,8 +65,7 @@ export default function EscrowDeposit({ contract, account, details }) {
                         </div>
                     )}
 
-                    {/* Deployer deposit */}
-                    {!details.isCompleted && details.balance === "0.0" && account === details.deployer && (
+                    {details.balance === "0.0" && !details.isCompleted && account === details.deployer && (
                         <div className="flex flex-col gap-4 mt-6">
                             <h1 className="text-lg font-semibold">Deposit Amount:</h1>
                             <input
@@ -90,15 +83,13 @@ export default function EscrowDeposit({ contract, account, details }) {
                         </div>
                     )}
 
-                    {/* Arbiter menunggu deposit */}
-                    {!details.isCompleted && details.balance === "0.0" && account === details.arbiter && (
+                    {details.balance === "0.0" && !details.isCompleted && account === details.arbiter && (
                         <p className="text-yellow-400 mt-4 font-semibold text-center">
                             Waiting for deployer to deposit ETH.
                         </p>
-                    )}
+                    )} 
 
-                    {/* ETH sudah dideposit (belum approve) */}
-                    {!details.isCompleted && details.balance !== "0.0" && (
+                    {details.balance !== "0.0" && !details.isCompleted  && (
                         <div className="flex flex-col items-center mt-4">
                             <img src={success} alt="" className="object-contain w-25 h-25" />
                             <p className="text-green-500 font-bold mt-4 text-xl text-center">
