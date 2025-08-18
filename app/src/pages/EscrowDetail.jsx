@@ -52,15 +52,26 @@ export default function EscrowDetail() {
 
     return (
         <div className="text-white font-mono">
-            <h1 className="text-center text-3xl font-semibold my-6">
-                Escrow <span className="text-blue-300">{address}</span>
+            <h1 className="text-center text-2xl md:text-3xl font-semibold my-6">
+                Escrow <span className="text-blue-300 text-lg md:text-3xl">{address.slice(0, 22)}...</span>
             </h1>
             <BackButton />
             <Welcome account={account} details={details} />
 
-            <div className="flex justify-center gap-6 mb-6">
-                <EscrowBoxDetail contract={contract} account={account} address={address} details={details} refreshDetails={fetchDetails}/>
-                <EscrowDeposit contract={contract} account={account} details={details} refreshDetails={fetchDetails} />
+            <div className="flex flex-col-reverse md:flex-row justify-center gap-6 mb-6 px-4 md:px-0">
+                <EscrowBoxDetail 
+                    contract={contract} 
+                    account={account} 
+                    address={address} 
+                    details={details} 
+                    refreshDetails={fetchDetails} 
+                />
+                <EscrowDeposit 
+                    contract={contract} 
+                    account={account} 
+                    details={details} 
+                    refreshDetails={fetchDetails} 
+                />
             </div>
         </div>
     )

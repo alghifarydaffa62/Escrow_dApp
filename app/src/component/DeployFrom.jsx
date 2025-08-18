@@ -101,7 +101,7 @@ export default function DeployForm({ onDeploy }) {
                     address={deployedEscrow.address}
                 />
             )}
-            <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-fit">
+            <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-fit w-full md:w-[36vw]">
                 <h1 className="text-2xl font-semibold">Deploy New Escrow</h1>
 
                 <div className="flex flex-col gap-2">
@@ -110,7 +110,7 @@ export default function DeployForm({ onDeploy }) {
                         type="text"
                         value={arbiter}
                         onChange={e => setArbiter(e.target.value)}
-                        className={`bg-[#192845] rounded-sm w-md h-8 p-2 border ${errors.arbiter ? "border-red-500" : "border-transparent"}`}
+                        className={`bg-[#192845] rounded-sm w-full h-8 p-2 border ${errors.arbiter ? "border-red-500" : "border-transparent"}`}
                     />
                     {errors.arbiter && <span className="text-red-400 text-sm">{errors.arbiter}</span>}
                 </div>
@@ -121,7 +121,7 @@ export default function DeployForm({ onDeploy }) {
                         type="text"
                         value={services}
                         onChange={e => setServices(e.target.value)}
-                        className={`bg-[#192845] rounded-sm w-md h-8 p-2 border ${errors.services ? "border-red-500" : "border-transparent"}`}
+                        className={`bg-[#192845] rounded-sm w-full h-8 p-2 border ${errors.services ? "border-red-500" : "border-transparent"}`}
                     />
                     {errors.services && <span className="text-red-400 text-sm">{errors.services}</span>}
                 </div>

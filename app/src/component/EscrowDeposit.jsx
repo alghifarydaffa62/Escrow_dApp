@@ -81,7 +81,9 @@ export default function EscrowDeposit({ contract, account, details, refreshDetai
                         <div className="flex flex-col gap-3 mt-6">
                             <h1 className="text-lg font-semibold">Deposit Amount:</h1>
                             <input
-                                className={`w-sm bg-[#172641] p-2 rounded-md border ${error ? "border-red-500" : "border-transparent"}`}
+                                className={`w-full md:w-xs bg-[#172641] p-2 rounded-md border ${
+                                    error ? "border-red-500" : "border-transparent"
+                                }`}
                                 value={amount}
                                 type="text"
                                 onChange={(e) => setAmount(e.target.value)}
@@ -91,7 +93,7 @@ export default function EscrowDeposit({ contract, account, details, refreshDetai
                             <button
                                 onClick={handleDeposit}
                                 disabled={isProcessing}
-                                className="cursor-pointer text-center p-2 font-semibold rounded-md bg-blue-700 hover:bg-blue-800 disabled:opacity-50"
+                                className="cursor-pointer mt-3 text-center p-2 font-semibold rounded-md bg-blue-700 hover:bg-blue-800 disabled:opacity-50"
                             >
                                 {isProcessing ? "Processing..." : "Deposit"}
                             </button>

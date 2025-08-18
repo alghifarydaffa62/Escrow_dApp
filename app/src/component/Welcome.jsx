@@ -24,7 +24,7 @@ export default function Welcome({account, details}) {
                             <p className="text-lg">Thank you arbiter and Thank you for using our service</p>
                         </div>
                     ): (
-                        <p className="text-lg">You will approve the transaction once ether is deposited</p>
+                        <p className="text-lg px-3">You will approve the transaction once ether is deposited</p>
                     )}
                     
                 </div>
