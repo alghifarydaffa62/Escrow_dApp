@@ -24,7 +24,11 @@ export default function EscrowDeploymentPop({ isOpen, onClose, address }) {
                 <p className="mt-2 text-lg md:text-xl font-bold text-gray-300">Escrow has been deployed</p>
                 <p className="mt-2 text-sm md:text-lg font-semibold">
                     Your escrow Address:{" "}
-                    <span className="text-blue-500 break-all">{address.slice(0, 15)}...</span>
+                    {address ? (
+                        <span className="text-blue-500 break-all">{address.slice(0, 15)}...</span>
+                    ) : (
+                        <span className="text-red-400">Address not found</span>
+                    )}
                 </p>
             </div>
         </div>

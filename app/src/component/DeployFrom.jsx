@@ -1,15 +1,11 @@
 import { useState } from "react"
-import deployEscrow from "../lib/deploy"
-import EscrowDeploymentPop from "./PopUp/EscrowDeploymentPop"
 import PendingPopUp from "./PopUp/PendingPopUp"
 
 export default function DeployForm({ onDeploy }) {
     const [arbiter, setArbiter] = useState("")
     const [services, setServices] = useState("")
     const [errors, setErrors] = useState({})
-    const [showDeployPop, setShowDeployPop] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
-    const [deployedEscrow, setDeployedEscrow] = useState()
     const [deployer, setDeployer] = useState("")
 
     const ethAddressRegex = /^0x[a-fA-F0-9]{40}$/
@@ -54,33 +50,20 @@ export default function DeployForm({ onDeploy }) {
         }
 
         try {
-
-            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" })
-            const deployerAddr = accounts[0]
-            setDeployer(deployerAddr)
-
+            const accounts = await window.ethereum.request({ method: "eth_requestAccounts" }) 
+            const deployerAddr = accounts[0] 
+            setDeployer(deployerAddr) 
+            
             if (!validateForm(deployerAddr)) return
 
             setIsProcessing(true)
-
-            const contract = await deployEscrow(arbiter, services)
-
-            const escrow = {
-                address: contract,
-                arbiter,
-                services,
-                deployer: deployerAddr,
-            }
-
-            onDeploy(escrow)
-            setDeployedEscrow(escrow)
-
-            setIsProcessing(false)
-            setShowDeployPop(true)
+            
+            await onDeploy({ arbiter, services })
             setArbiter("")
             setServices("")
         } catch (error) {
             console.error("Deployment error: ", error)
+        } finally {
             setIsProcessing(false)
         }
     }
@@ -88,13 +71,7 @@ export default function DeployForm({ onDeploy }) {
     return (
         <>  
             {isProcessing && <PendingPopUp type="Escrow Deployment"/>}
-            {showDeployPop && (
-                <EscrowDeploymentPop
-                    isOpen={showDeployPop}
-                    onClose={() => setShowDeployPop(false)}
-                    address={deployedEscrow}
-                />
-            )}
+            
             <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-fit w-full md:w-[36vw]">
                 <h1 className="text-2xl font-semibold">Deploy New Escrow</h1>
 
