@@ -12,6 +12,9 @@ pragma solidity ^0.8.28;
     or refund to the deployer
  */
 contract Escrow {
+    /// @notice Name of the escrow set by the deployer
+    string public name;
+
     /// @notice Address of the person deploying the contract (payer)
     address public deployer;
 
@@ -31,8 +34,9 @@ contract Escrow {
      * @param _services Address of the service provider
      * @param _arbiter Address of the third party (decision maker)
      */
-    constructor(address _services, address _arbiter) {
-        deployer = msg.sender;
+    constructor(string memory _name, address _deployer, address _services, address _arbiter) {
+        name = _name;
+        deployer = _deployer;
         services = _services;
         arbiter = _arbiter;
     }
