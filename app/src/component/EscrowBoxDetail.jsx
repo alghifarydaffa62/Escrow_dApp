@@ -76,7 +76,7 @@ export default function EscrowBoxDetail({ contract, account, address, details, r
                     <DetailRow label="Arbiter Address" value={details.arbiter} />
                     <DetailRow label="Balance" value={details.balance} />
 
-                    {!details.isCompleted && account === details.arbiter && (
+                    {!details.isCompleted && account === details.arbiter && details.balance != 0.0 && (
                         <button
                             className="cursor-pointer mt-4 bg-green-600 p-2 rounded-md font-semibold"
                             onClick={handleApprove}

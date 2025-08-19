@@ -59,11 +59,6 @@ export default function DeployForm({ onDeploy }) {
             const deployerAddr = accounts[0]
             setDeployer(deployerAddr)
 
-            if (!deployerAddr) {
-                alert("Wallet tidak terhubung ke MetaMask.")
-                return
-            }
-
             if (!validateForm(deployerAddr)) return
 
             setIsProcessing(true)
@@ -71,11 +66,10 @@ export default function DeployForm({ onDeploy }) {
             const contract = await deployEscrow(arbiter, services)
 
             const escrow = {
-                address: await contract.getAddress(),
+                address: contract,
                 arbiter,
                 services,
                 deployer: deployerAddr,
-                contract
             }
 
             onDeploy(escrow)
@@ -98,7 +92,7 @@ export default function DeployForm({ onDeploy }) {
                 <EscrowDeploymentPop
                     isOpen={showDeployPop}
                     onClose={() => setShowDeployPop(false)}
-                    address={deployedEscrow.address}
+                    address={deployedEscrow}
                 />
             )}
             <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-fit w-full md:w-[36vw]">

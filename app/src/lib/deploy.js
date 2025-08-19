@@ -1,19 +1,34 @@
 import { BrowserProvider, ContractFactory } from "ethers";
-import Escrow from "../../../artifacts/contracts/Escrow.sol/Escrow.json"
+import EscrowFactoryAbi from "../../../artifacts/contracts/EscrowFactory.sol/EscrowFactory.json"
+import { ethers } from "ethers";
+
+const FACTORY_ADDRESS = "0x678EC708303543BE5B91e4fB89Ed323327ff3A7c";
 
 export default async function deployEscrow(arbiter, services) {
     const provider = new BrowserProvider(window.ethereum)
     const signer = await provider.getSigner()
 
-    const factory = new ContractFactory(
-        Escrow.abi,
-        Escrow.bytecode,
+    const factory = new ethers.Contract(
+        FACTORY_ADDRESS,
+        EscrowFactoryAbi.abi,
         signer
     )
 
-    const contract = await factory.deploy(services, arbiter)
+    const tx = await factory.createEscrow(services, arbiter)
+    const receipt = await tx.wait()
 
-    await contract.waitForDeployment();
+    const event = receipt.logs
+        .map(log => {
+            try {
+                return factory.interface.parseLog(log)
+            } catch {
+                return null
+            }
+        })
+        .filter(e => e && e.name === "EscrowCreated")[0]
 
-    return contract;
+    if(!event) throw new Error("EscrowCreated not found");
+
+    const escrowAddress = event.args.escrowAddress
+    return escrowAddress
 }

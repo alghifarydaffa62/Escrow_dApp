@@ -1,21 +1,43 @@
 import { useEffect, useState } from "react"
 import DeployForm from "../component/DeployFrom"
 import ContactList from "../component/ContractList"
+import { ethers } from "ethers"
+import EscrowFactoryAbi from "../../../artifacts/contracts/EscrowFactory.sol/EscrowFactory.json"
+
+const FACTORY_ADDRESS = "0x678EC708303543BE5B91e4fB89Ed323327ff3A7c";
 
 export default function Home() {
     const [escrows, setEscrows] = useState([])
 
     useEffect(() => {
-        const saved = localStorage.getItem('escrows')
-        if(saved) {
-            setEscrows(JSON.parse(saved))
+        const loadEscrow = async () => {
+            const provider = new ethers.BrowserProvider(window.ethereum)
+            const signer = await provider.getSigner()
+            const userAddr = signer.address
+
+            const factory = new ethers.Contract(FACTORY_ADDRESS, EscrowFactoryAbi.abi, provider)
+            const escrows = await factory.getUserEscrows(userAddr)
+
+            setEscrows(escrows)
         }
+
+        loadEscrow()
     }, [])
 
-    const handleNewEscrow = (escrow) => {
-        const updated = [escrow, ...escrows]
-        setEscrows(updated)
-        localStorage.setItem('escrows', JSON.stringify(updated))
+    const handleNewEscrow = async (escrowObj) => {
+        const { services, arbiter } = escrowObj
+
+        const provider = new ethers.BrowserProvider(window.ethereum)
+        const signer = await provider.getSigner()
+        const factory = new ethers.Contract(FACTORY_ADDRESS, EscrowFactoryAbi.abi, signer)
+
+        const tx = await factory.createEscrow(services, arbiter)
+        await tx.wait()
+
+        const userAddr = signer.address
+        const userEscrows = await factory.getUserEscrows(userAddr)
+
+        setEscrows(userEscrows)
     }
 
     return(
