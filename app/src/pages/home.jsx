@@ -5,18 +5,20 @@ import EscrowDeploymentPop from "../component/PopUp/EscrowDeploymentPop"
 import { ethers } from "ethers"
 import EscrowFactoryAbi from "../../../artifacts/contracts/EscrowFactory.sol/EscrowFactory.json"
 
-const FACTORY_ADDRESS = "0x5Ab4605eBd84503668DE1517aB5ff4d180435B8B";
+const FACTORY_ADDRESS = "0x7B193304e065bFFA17Db59eb3239f56351E3b61b";
 
 export default function Home() {
     const [escrows, setEscrows] = useState([])
+    const [user, setUser] = useState(null)
     const [showDeployPop, setShowDeployPop] = useState(false)
-    const [deployedEscrow, setDeployedEscrow] = useState()
+    const [deployedEscrow, setDeployedEscrow] = useState(null)
 
     useEffect(() => {
         const loadEscrow = async () => {
             const provider = new ethers.BrowserProvider(window.ethereum)
             const signer = await provider.getSigner()
             const userAddr = signer.address
+            setUser(userAddr)
 
             const factory = new ethers.Contract(FACTORY_ADDRESS, EscrowFactoryAbi.abi, provider)
             const escrows = await factory.getUserEscrows(userAddr)
@@ -29,7 +31,7 @@ export default function Home() {
 
     const handleNewEscrow = async ({ name, services, arbiter }) => {
         if (!window.ethereum) return
-        
+
         try {
             const provider = new ethers.BrowserProvider(window.ethereum)
             const signer = await provider.getSigner()
@@ -82,7 +84,7 @@ export default function Home() {
 
             <div className="flex flex-col md:flex-row justify-center gap-4 px-4 md:px-0">
                 <DeployForm onDeploy={handleNewEscrow} />
-                <ContactList escrows={escrows} />
+                <ContactList escrows={escrows} user={user}/>
             </div>
         </div>  
     )

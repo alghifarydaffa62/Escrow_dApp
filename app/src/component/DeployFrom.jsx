@@ -14,6 +14,17 @@ export default function DeployForm({ onDeploy }) {
     const validateForm = (deployerAddr) => {
         let newErrors = {}
 
+        if (!name || name.trim() === "") {
+            newErrors.name = "Please input escrow name"
+        } else if (name.trim().length < 3) {
+            newErrors.name = "Escrow name must be at least 3 characters"
+        } else if (name.trim().length > 32) {
+            newErrors.name = "Escrow name can't be longer than 32 characters"
+        }
+        else if (!/^[a-zA-Z0-9 ]+$/.test(name.trim())) {
+            newErrors.name = "Escrow name can only contain letters, numbers, and spaces"
+        }
+
         if (!arbiter) {
             newErrors.arbiter = "Please input the arbiter address"
         } else if (!ethAddressRegex.test(arbiter)) {
@@ -83,9 +94,9 @@ export default function DeployForm({ onDeploy }) {
                         type="text"
                         value={name}
                         onChange={e => setName(e.target.value)}
-                        className={`bg-[#192845] rounded-sm w-full h-8 p-2 border ${errors.arbiter ? "border-red-500" : "border-transparent"}`}
+                        className={`bg-[#192845] rounded-sm w-full h-8 p-2 border $${errors.name ? "border-red-500" : "border-transparent"}`}
                     />
-                    
+                    {errors.name && <span className="text-red-400 text-sm">{errors.name}</span>}
                 </div>
 
                 <div className="flex flex-col gap-2">

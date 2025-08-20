@@ -21,7 +21,8 @@ export default function EscrowDetail() {
         const escrow = new ethers.Contract(address, EscrowAbi.abi, signer)
         setContract(escrow)
 
-        const [deployer, arbiter, services, bal, isCompleted] = await Promise.all([
+        const [name, deployer, arbiter, services, bal, isCompleted] = await Promise.all([
+            escrow.name(),
             escrow.deployer(),
             escrow.arbiter(),
             escrow.services(),
@@ -33,7 +34,7 @@ export default function EscrowDetail() {
         const userAddress = await signer.getAddress()
 
         setAccount(userAddress)
-        setDetails({ deployer, arbiter, services, balance, isCompleted })
+        setDetails({ name, deployer, arbiter, services, balance, isCompleted })
         setLoading(false)
     }
 
@@ -52,8 +53,8 @@ export default function EscrowDetail() {
 
     return (
         <div className="text-white font-mono">
-            <h1 className="text-center text-2xl md:text-3xl font-semibold my-6">
-                Escrow <span className="text-blue-300 text-lg md:text-3xl">{address.slice(0, 22)}...</span>
+            <h1 className="text-center text-2xl md:text-4xl font-semibold my-6">
+                {details.name}
             </h1>
             <BackButton />
             <Welcome account={account} details={details} />
