@@ -2,6 +2,7 @@ import { useState } from "react"
 import PendingPopUp from "./PopUp/PendingPopUp"
 
 export default function DeployForm({ onDeploy }) {
+    const [name, setName] = useState("")
     const [arbiter, setArbiter] = useState("")
     const [services, setServices] = useState("")
     const [errors, setErrors] = useState({})
@@ -14,27 +15,27 @@ export default function DeployForm({ onDeploy }) {
         let newErrors = {}
 
         if (!arbiter) {
-            newErrors.arbiter = "Arbiter address tidak boleh kosong."
+            newErrors.arbiter = "Please input the arbiter address"
         } else if (!ethAddressRegex.test(arbiter)) {
-            newErrors.arbiter = "Arbiter address tidak valid (harus 0x + 40 hex)."
+            newErrors.arbiter = "Invalid arbiter address!"
         }
 
         if (!services) {
-            newErrors.services = "Service Provider address tidak boleh kosong."
+            newErrors.services = "Please input the service provider address"
         } else if (!ethAddressRegex.test(services)) {
-            newErrors.services = "Service Provider address tidak valid (harus 0x + 40 hex)."
+            newErrors.services = "Invalid service provider address!"
         }
 
         if (arbiter && services && arbiter.toLowerCase() === services.toLowerCase()) {
-            newErrors.services = "Arbiter dan Service Provider tidak boleh sama."
+            newErrors.services = "Arbiter & Service provider address can't be same!"
         }
 
         if (deployerAddr) {
             if (arbiter && deployerAddr.toLowerCase() === arbiter.toLowerCase()) {
-                newErrors.arbiter = "Deployer tidak boleh sama dengan Arbiter."
+                newErrors.arbiter = "Deployer & arbiter address can't be same!"
             }
             if (services && deployerAddr.toLowerCase() === services.toLowerCase()) {
-                newErrors.services = "Deployer tidak boleh sama dengan Service Provider."
+                newErrors.services = "Deployer & Arbiter address can't be same!"
             }
         }
 
@@ -45,7 +46,7 @@ export default function DeployForm({ onDeploy }) {
     const handleDeploy = async () => {
 
         if (!window.ethereum) {
-            alert("MetaMask tidak ditemukan! Silakan install MetaMask dulu.")
+            alert("Please isntall metamask.")
             return
         }
 
@@ -58,7 +59,8 @@ export default function DeployForm({ onDeploy }) {
 
             setIsProcessing(true)
             
-            await onDeploy({ arbiter, services })
+            await onDeploy({ name, arbiter, services })
+            setName("")
             setArbiter("")
             setServices("")
         } catch (error) {
@@ -74,6 +76,17 @@ export default function DeployForm({ onDeploy }) {
             
             <div className="flex flex-col gap-4 text-white bg-[#121d32] p-6 font-mono rounded-md h-fit w-full md:w-[36vw]">
                 <h1 className="text-2xl font-semibold">Deploy New Escrow</h1>
+
+                <div className="flex flex-col gap-2">
+                    <label className="text-lg font-semibold">Escrow Name:</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        className={`bg-[#192845] rounded-sm w-full h-8 p-2 border ${errors.arbiter ? "border-red-500" : "border-transparent"}`}
+                    />
+                    
+                </div>
 
                 <div className="flex flex-col gap-2">
                     <label className="text-lg font-semibold">Arbiter Address:</label>

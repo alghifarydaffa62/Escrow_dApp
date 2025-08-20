@@ -5,7 +5,7 @@ import EscrowDeploymentPop from "../component/PopUp/EscrowDeploymentPop"
 import { ethers } from "ethers"
 import EscrowFactoryAbi from "../../../artifacts/contracts/EscrowFactory.sol/EscrowFactory.json"
 
-const FACTORY_ADDRESS = "0x678EC708303543BE5B91e4fB89Ed323327ff3A7c";
+const FACTORY_ADDRESS = "0x5Ab4605eBd84503668DE1517aB5ff4d180435B8B";
 
 export default function Home() {
     const [escrows, setEscrows] = useState([])
@@ -27,14 +27,15 @@ export default function Home() {
         loadEscrow()
     }, [])
 
-    const handleNewEscrow = async ({ services, arbiter }) => {
+    const handleNewEscrow = async ({ name, services, arbiter }) => {
         if (!window.ethereum) return
+        
         try {
             const provider = new ethers.BrowserProvider(window.ethereum)
             const signer = await provider.getSigner()
             const factory = new ethers.Contract(FACTORY_ADDRESS, EscrowFactoryAbi.abi, signer)
 
-            const tx = await factory.createEscrow(services, arbiter)
+            const tx = await factory.createEscrow(name, services, arbiter)
             const receipt = await tx.wait()
 
             const event = receipt.logs.find(
