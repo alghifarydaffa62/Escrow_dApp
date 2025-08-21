@@ -11,7 +11,6 @@ export default function Home() {
     const [escrows, setEscrows] = useState([])
     const [user, setUser] = useState(null)
     const [showDeployPop, setShowDeployPop] = useState(false)
-    const [deployedEscrow, setDeployedEscrow] = useState(null)
 
     useEffect(() => {
         const loadEscrow = async () => {
@@ -38,14 +37,8 @@ export default function Home() {
             const factory = new ethers.Contract(FACTORY_ADDRESS, EscrowFactoryAbi.abi, signer)
 
             const tx = await factory.createEscrow(name, services, arbiter)
-            const receipt = await tx.wait()
+            await tx.wait()
 
-            const event = receipt.logs.find(
-                log => log.fragment?.name === "NewEscrow"
-            )
-            const newEscrowAddr = event?.args?.escrowAddr || null
-
-            setDeployedEscrow(newEscrowAddr)   
             setShowDeployPop(true)             
 
             const userAddr = signer.address
@@ -78,7 +71,6 @@ export default function Home() {
                 <EscrowDeploymentPop
                     isOpen={showDeployPop}
                     onClose={() => setShowDeployPop(false)}
-                    address={deployedEscrow}
                 />
             )}
 

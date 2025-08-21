@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import deploySuccess from "../../assets/rocket.png";
 
-export default function EscrowDeploymentPop({ isOpen, onClose, address }) {
+export default function EscrowDeploymentPop({ isOpen, onClose }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
             <div
@@ -22,14 +22,6 @@ export default function EscrowDeploymentPop({ isOpen, onClose, address }) {
                 <img src={deploySuccess} alt="Success" className="mx-auto mb-4 w-20 md:w-28" />
                 <h1 className="text-green-400 font-bold text-2xl md:text-3xl">Deployment Success</h1>
                 <p className="mt-2 text-lg md:text-xl font-bold text-gray-300">Escrow has been deployed</p>
-                <p className="mt-2 text-sm md:text-lg font-semibold">
-                    Your escrow Address:{" "}
-                    {address ? (
-                        <span className="text-blue-500 break-all">{address.slice(0, 15)}...</span>
-                    ) : (
-                        <span className="text-red-400">Address not found</span>
-                    )}
-                </p>
             </div>
         </div>
     );
