@@ -26,7 +26,7 @@ export default function ConnectWallet({ user, onConnect, onDisconnect }) {
           </h1>
           <button
             onClick={onDisconnect}
-            className="bg-red-500 text-white px-4 py-2 rounded"
+            className="bg-red-500 text-white px-4 py-2 rounded cursor-pointer"
           >
             Disconnect Wallet
           </button>

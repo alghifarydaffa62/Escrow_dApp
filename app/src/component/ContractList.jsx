@@ -5,7 +5,7 @@ export default function ContactList({ escrows, user }) {
         <div className="text-white bg-[#121d32] p-6 font-mono rounded-md w-full md:w-[30vw]">
             <h1 className="font-semibold text-2xl mb-4">Contract Deployed</h1>
             
-            <div className="h-[280px] overflow-y-scroll flex flex-col gap-4 rounded-md">
+            <div className="h-[50vh] overflow-y-scroll flex flex-col gap-4 rounded-md">
                 {escrows.length === 0 ? (
                     <p className="text-gray-400 italic">No Escrow Found</p>
                 ) : (
