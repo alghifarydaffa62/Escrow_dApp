@@ -9,7 +9,7 @@ export default function EscrowDeploymentPop({ isOpen, onClose }) {
                     relative transform transition-all duration-500 
                     ${isOpen ? "translate-y-0 opacity-100" : "-translate-y-10 opacity-0"}
                     bg-[#121d32] rounded-2xl p-6 shadow-xl 
-                    w-full max-w-md md:max-w-2xl 
+                    w-full max-w-md md:max-w-lg 
                     text-center font-mono text-white
                 `}
             >
