@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import EscrowAbi from "../../../artifacts/contracts/Escrow.sol/Escrow.json"
+import EscrowAbi from "../lib/EscrowAbi.json"
 import EscrowBoxDetail from "../component/EscrowBoxDetail"
 import EscrowDeposit from "../component/EscrowDeposit"
 import BackButton from "../component/backbutton"
