@@ -11,7 +11,7 @@ export default function Welcome({account, details}) {
                             <p className="text-lg">Thank you Deployer and Thank you for using our service</p>
                         </div>
                     ) : (
-                        <h1 className="text-lg">Please deposit ether for the service provider</h1>
+                        <h1 className="text-lg">Please deposit SepoliaETH for the service provider</h1>
                     )}
                     
                 </div>

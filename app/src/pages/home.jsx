@@ -4,7 +4,7 @@ import ContactList from "../component/ContractList"
 import EscrowDeploymentPop from "../component/PopUp/EscrowDeploymentPop"
 import ConnectWallet from "../component/ConnectWallet"
 import { ethers } from "ethers"
-import EscrowFactoryAbi from "../../../artifacts/contracts/EscrowFactory.sol/EscrowFactory.json"
+import EscrowFactoryAbi from "../lib/EscrowFactoryAbi.json"
 
 const FACTORY_ADDRESS = "0x7B193304e065bFFA17Db59eb3239f56351E3b61b";
 

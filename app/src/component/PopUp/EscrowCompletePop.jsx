@@ -35,7 +35,7 @@ export default function EscrowCompletePop({ isOpen, onClose, hash, amount, servi
                     </div>
                     <div className="flex justify-between gap-4">
                         <h1 className="text-sm md:text-lg font-bold">Escrow Amount</h1>
-                        <p className="font-medium">{amount} ETH</p>
+                        <p className="font-medium">{amount} SepoliaETH</p>
                     </div>
                     <div className="flex justify-between gap-4">
                         <h1 className="text-base md:text-lg font-bold">Status</h1>

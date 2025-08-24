@@ -14,11 +14,11 @@ export default function EscrowDeposit({ contract, account, details, refreshDetai
 
     const validateAmount = () => {
         if (!amount) {
-            setError("Amount tidak boleh kosong.")
+            setError("Must send Sepolia ETH!")
             return false
         }
         if (isNaN(amount) || Number(amount) <= 0) {
-            setError("Amount harus berupa angka lebih besar dari 0.")
+            setError("Deposit amount must be greater than 0")
             return false
         }
         setError("")
@@ -66,7 +66,7 @@ export default function EscrowDeposit({ contract, account, details, refreshDetai
 
             {(account === details.deployer || account === details.arbiter) && (
                 <div className="bg-[#121d32] p-6 rounded-md h-fit">
-                    <h1 className="text-center text-2xl font-bold">Deposit Ether</h1>
+                    <h1 className="text-center text-2xl font-bold">Deposit SepoliaETH</h1>
 
                     {details.isCompleted && (
                         <div className="flex flex-col gap-2 items-center mt-4">
@@ -79,7 +79,7 @@ export default function EscrowDeposit({ contract, account, details, refreshDetai
 
                     {details.balance === "0.0" && !details.isCompleted && account === details.deployer && (
                         <div className="flex flex-col gap-3 mt-6">
-                            <h1 className="text-lg font-semibold">Deposit Amount:</h1>
+                            <h1 className="text-lg font-semibold">Deposit Amount (in SepoliaETH):</h1>
                             <input
                                 className={`w-full md:w-xs bg-[#172641] p-2 rounded-md border ${
                                     error ? "border-red-500" : "border-transparent"
@@ -102,7 +102,7 @@ export default function EscrowDeposit({ contract, account, details, refreshDetai
 
                     {details.balance === "0.0" && !details.isCompleted && account === details.arbiter && (
                         <p className="text-yellow-400 mt-4 font-semibold text-center">
-                            Waiting for deployer to deposit ETH.
+                            Waiting for deployer to deposit SepoliaETH.
                         </p>
                     )} 
 
@@ -110,7 +110,7 @@ export default function EscrowDeposit({ contract, account, details, refreshDetai
                         <div className="flex flex-col items-center mt-4">
                             <img src={success} alt="" className="object-contain w-25 h-25" />
                             <p className="text-green-500 font-bold mt-4 text-xl text-center">
-                                Deployer has deposited ETH.
+                                Deployer has deposited SepoliaETH.
                             </p>
                         </div>
                     )}

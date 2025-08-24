@@ -31,7 +31,7 @@ export default function DepositSuccessPop({ isOpen, onClose, hash, depositAmount
                     </div>
                     <div className="flex justify-between gap-4">
                         <h1 className="text-base md:text-lg font-semibold">Deposit Amount</h1>
-                        <p className="font-bold">{depositAmount} ETH</p>
+                        <p className="font-bold">{depositAmount} SepoliaETH</p>
                     </div>
                     <div className="flex justify-between gap-4">
                         <h1 className="text-base md:text-lg font-semibold">Status</h1>

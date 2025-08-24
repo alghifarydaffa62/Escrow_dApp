@@ -1,5 +1,5 @@
 import { BrowserProvider, ContractFactory } from "ethers";
-import EscrowFactoryAbi from "../../../artifacts/contracts/EscrowFactory.sol/EscrowFactory.json"
+import EscrowFactoryAbi from "../lib/EscrowFactoryAbi.json"
 import { ethers } from "ethers";
 
 const FACTORY_ADDRESS = "0x678EC708303543BE5B91e4fB89Ed323327ff3A7c";
