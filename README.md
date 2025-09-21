@@ -53,6 +53,9 @@ This project demonstrates how funds can be securely held in an escrow contract u
 ---
 
 ## 🚀 Deployment
-This dApp is already deployed on Vercel: 
+
+This dApp is already deployed on Vercel: https://escrow-dapp-delta.vercel.app/
+And also the EscrowFactory Smart Contract is deployed on Sepolia Testnet: 0x678EC708303543BE5B91e4fB89Ed323327ff3A7c
+https://sepolia.etherscan.io/address/0x678EC708303543BE5B91e4fB89Ed323327ff3A7c
 
 ---
