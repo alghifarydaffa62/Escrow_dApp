@@ -89,7 +89,7 @@ export default function Home() {
         <div>
             <div className="mt-6 mb-10">
                 <h1 className="text-3xl text-white text-center font-bold font-mono">
-                    Escrow Decentralized Application
+                    Decentralized Escrow Application
                 </h1>
             </div>
 
